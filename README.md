@@ -9,4 +9,5 @@ GURPS Character Creator
 To install and run:
 npm install
 node index.js
+open browser and navigate to http://localhost:3000/gurps.html
 
