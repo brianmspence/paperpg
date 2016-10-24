@@ -5,3 +5,8 @@ This project is intended to produce a webapp with pages to support the playing a
 
 Starting with:
 GURPS Character Creator
+
+To install and run:
+npm install
+node index.js
+
