@@ -1,14 +1,59 @@
-var makeSkill = function() {
-	return {
-		name:'',
-		attribute:'',
-		difficultry:'',
-		defaults:[],
-		page:0,
-		specialization:false,
-		description:''
-	};
+var Difficulty = {
+	EASY:'Easy',
+	AVERAGE:'Average',
+	HARD:'Hard',
+	VERY_HARD:'Very Hard'
 };
+
+var Attribute = {
+	IQ:'Intelligence',
+	DX:'Dexterity',
+	ST:'Strength',
+	HT:'Health'
+}
+
+var calcSkillCost = function(level, difficulty, attributeLevel) {
+	return calcSkillCostRelative(level - attributeLevel, difficulty);
+}
+
+var calcSkillCostRelative = function(relativeLevel, difficulty) {
+	var diffModifier = 0;
+	switch (difficulty) {
+		case 'Easy':
+			diffModifier = 0;
+			break;
+		case 'Average':
+			diffModifier = -1;
+			break;
+		case 'Hard':
+			diffModifier = -2;
+			break;
+		case 'Very Hard':
+			diffModifier = -3;
+			break;
+		default:
+			diffModifier = 0;
+	} 
+
+	var cost = 0;
+
+	if(relativeLevel < diffModifier) {
+		cost = NaN;
+	}
+	if(relativeLevel == diffModifier) {
+		cost = 1;
+	}
+	else if (relativeLevel == diffModifier + 1) {
+		cost = 2;
+	}
+	else {
+		cost = 4 * (level - (diffModifer + 1));
+	}
+
+	return cost;
+}
+
+ 
 
 var SkillTable = React.createClass({
 
@@ -18,7 +63,7 @@ var SkillTable = React.createClass({
     render: function() {
 		var tableContents = this.props.data.map(function(row) {
 			return (
-					<tr>
+					<tr key={row.name}>
 							<td>{row.name}</td>
 							<td>{row.attribute}</td>
 							<td>{row.difficulty}</td>

@@ -4,11 +4,20 @@
   "description": "Pen and paper role playing game utilities",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "browserify ./public/scripts/characterCreator.js -t babelify -o ./public/scripts/bundle.js",
+    "watch": "watchify ./public/scripts/characterCreation/characterCreator.js -t babelify -o ./public/scripts/characterCreation/bundle.js"
   },
   "author": "Brian Spence",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.14.0"
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.1",
+    "express": "^4.14.0",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
+    "watchify": "^3.7.0"
   }
 }
