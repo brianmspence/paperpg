@@ -77,6 +77,46 @@ function calcBasicCost(basic) {
 	};
 }
 
+function calcAppearanceCost(appearance) {
+	var appearanceCost = 0;
+	switch(appearance) {
+		case -5:
+			appearanceCost = -24;
+			break;
+		case -4:
+			appearanceCost = -20;
+			break;
+		case -3:
+			appearanceCost = -16;
+			break;
+		case -2:
+			appearanceCost = -8;
+			break;
+		case -1:
+			appearanceCost = -4;
+			break;
+		case 0:
+			appearanceCost = 0;
+			break;
+		case 1:
+			appearanceCost = 4;
+			break;
+		case 2:
+			appearanceCost = 12;
+			break;
+		case 3:
+			appearanceCost = 16;
+			break;
+		case 4:
+			appearanceCost = 20;
+			break;
+		default:
+			appearanceCost = 0;
+	}
+
+	return appearanceCost;
+}
+
 var CharacterCreator = React.createClass({
 
     getInitialState: function() {
@@ -139,7 +179,8 @@ var CharacterCreator = React.createClass({
     	this.updatePhysicalFeatures('age', e.target.value);
     },
     handleAppearanceChange: function(e) {
-    	this.updatePhysicalFeatures('appearance', e.target.value);
+    	var appearance = Number(e.target.value);
+    	this.updatePhysicalFeatures('appearance', appearance);
     },
     handleSizeModifierChange: function(e) {
     	this.updatePhysicalFeatures('sizeModifier', e.target.value);
@@ -189,6 +230,7 @@ var CharacterCreator = React.createClass({
     render: function() {
     	const secChar = calcSecAttrs(this.state.basicAttributes, this.state.userMods);
     	const basicCost = calcBasicCost(this.state.basicAttributes);
+    	const appearanceCost = calcAppearanceCost(this.state.physicalFeatures.appearance);
 
         return (
 			<div>
@@ -202,8 +244,7 @@ var CharacterCreator = React.createClass({
 					age={this.state.physicalFeatures.age}
 					appearance={this.state.physicalFeatures.appearance}
 					sizeModifier={this.state.physicalFeatures.sizeModifier}
-					appearanceCost='0' //TODO calc
-					smCost='' //TODO remove
+					appearanceCost={appearanceCost}
 					onHeightChange={this.handleHeightChange}
 					onWeightChange={this.handleWeightChange}
 					onAgeChange={this.handleAgeChange}
