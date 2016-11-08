@@ -1,5 +1,6 @@
 var React = require('react');
 var NumberAttribute = require('./numberAttribute.js');
+var SpellTable = require('../common/spellTable.js');
 
 var Spells = React.createClass({
 
@@ -13,9 +14,8 @@ var Spells = React.createClass({
         return (
 			<div>
                 <h2>Spells</h2>
-                <div>
-                	table
-            	</div>
+                <SpellTable data={[]} />
+                <button>Add Spell</button>
             </div>
         );
   }

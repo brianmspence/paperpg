@@ -1,62 +1,54 @@
 var React = require('react');
 var NumberAttribute = require('./numberAttribute.js');
 
-var SecondaryCharacteristics = React.createClass({
-
-    getInitialState: function() {
-        return {
-        	HP:10,
-            FP:10,
-            Will:10,
-            Per:10,
-            BS:5,
-            BM:5
-        };
-        
-    },
-    handleHPChange: function(e) {
-    	this.setState({HP: e.target.value});
-    },
-    handleFPChange: function(e) {
-        this.setState({FP: e.target.value});
-    },
-    handleWillChange: function(e) {
-        this.setState({Will: e.target.value});
-    },
-    handlePerChange: function(e) {
-        this.setState({Per: e.target.value});
-    },
-    handleBsChange: function(e) {
-        this.setState({BS: e.target.value});
-    },
-    handleBmChange: function(e) {
-        this.setState({BM: e.target.value});
-    },
-    render: function() {
-        return (
-			<div>
-                <h2>Secondary Characteristics</h2>
-                <NumberAttribute value={this.state.HP} onChange={this.handleHPChange} cost={this.props.HPCost} label="Health Points" />
-                <NumberAttribute value={this.state.FP} onChange={this.handleFPChange} cost={this.props.FPCost} label="Fatigue Points" />
-                <NumberAttribute value={this.state.Will} onChange={this.handleWillChange} cost={this.props.WillCost} label="Willpower" />
-                <NumberAttribute value={this.state.Per} onChange={this.handlePerChange} cost={this.props.PerCost} label="Perception" />
-                <NumberAttribute value={this.state.BS} onChange={this.handleBsChange} cost={this.props.BsCost} label="Basic Speed" />
-                <NumberAttribute value={this.state.BM} onChange={this.handleBmChange} cost={this.props.BmCost} label="Basic Move" />
-                <div>
-                    <span>Basic Lift {this.props.BL}</span>
-                </div>
-                <div>
-                    <span>Dodge {this.props.Dodge}</span>
-                </div>
-                <div>
-                    <span>Damage Swing {this.props.DmgSw}</span>
-                </div>
-                <div>
-                    <span>Damage Throw {this.props.DmgThr}</span>
-                </div>
-			</div>
-        );
-  }
-});
+function SecondaryCharacteristics (props) {
+    return (
+		<div>
+            <h2>Secondary Characteristics</h2>
+            <NumberAttribute
+                value={props.HP}
+                onChange={(e) => props.onHPChange(e)}
+                cost={props.HPCost}
+                label="Health Points" />
+            <NumberAttribute
+                value={props.FP}
+                onChange={(e) => props.onFPChange(e)}
+                cost={props.FPCost}
+                label="Fatigue Points" />
+            <NumberAttribute
+                value={props.Will}
+                onChange={(e) => props.onWillChange(e)}
+                cost={props.WillCost}
+                label="Willpower" />
+            <NumberAttribute
+                value={props.Per}
+                onChange={(e) => props.onPerChange(e)}
+                cost={props.PerCost}
+                label="Perception" />
+            <NumberAttribute
+                value={props.BS}
+                onChange={(e) => props.onBsChange(e)}
+                cost={props.BsCost}
+                label="Basic Speed" />
+            <NumberAttribute
+                value={props.BM}
+                onChange={(e) => props.onBmChange(e)}
+                cost={props.BmCost}
+                label="Basic Move" />
+            <div>
+                <span>Basic Lift {props.BL}</span>
+            </div>
+            <div>
+                <span>Dodge {props.Dodge}</span>
+            </div>
+            <div>
+                <span>Damage Swing {props.DmgSw}</span>
+            </div>
+            <div>
+                <span>Damage Thrust {props.DmgThr}</span>
+            </div>
+		</div>
+    );
+} 
 
 module.exports = SecondaryCharacteristics;

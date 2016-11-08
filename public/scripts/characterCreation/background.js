@@ -1,15 +1,17 @@
 var React = require('react');
+const {Table, Column, Cell} = require('fixed-data-table');
 var NumberAttribute = require('./numberAttribute.js');
+
 
 var Background = React.createClass({
 
     getInitialState: function() {
         return {
-        	TL:10,
-            Status:10,
-            Rep:10,
-            Wealth:10,
-            Rank:5
+        	TL:1,
+            Status:0,
+            Rep:0,
+            Wealth:0,
+            Rank:0
         };
         
     },
@@ -38,10 +40,48 @@ var Background = React.createClass({
                 <NumberAttribute value={this.state.Wealth} onChange={this.handleWealthChange} cost={this.props.WealthCost} label="Wealth" />
                 <NumberAttribute value={this.state.Rank} onChange={this.handleRankChange} cost={this.props.RankCost} label="Rank" />
                 <div>
-                    <span>Langagues Table</span>
+                    <h3>Languages</h3>
+                    <Table
+                        rowsCount={1}
+                        rowHeight={30}
+                        width={440}
+                        height={60}
+                        headerHeight={30}>
+                        <Column
+                            header={<Cell>Language</Cell>}
+                          cell={<Cell>Common</Cell>}
+                          width={200} />
+                          <Column
+                            header={<Cell>Spoken</Cell>}
+                          cell={<Cell>Native</Cell>}
+                          width={80} />
+                          <Column
+                            header={<Cell>Written</Cell>}
+                          cell={<Cell>Literacy</Cell>}
+                          width={80} />
+                          <Column
+                            header={<Cell>Cost</Cell>}
+                          cell={<Cell>0</Cell>}
+                          width={80} />
+                    </Table>
                 </div>
                 <div>
-                    <span>Culture Table</span>
+                    <h3>Culture Familiarities</h3>
+                    <Table
+                        rowsCount={1}
+                        rowHeight={30}
+                        width={280}
+                        height={60}
+                        headerHeight={30}>
+                        <Column
+                            header={<Cell>Culture</Cell>}
+                          cell={<Cell>Choice</Cell>}
+                          width={200} />
+                          <Column
+                            header={<Cell>Cost</Cell>}
+                          cell={<Cell>0</Cell>}
+                          width={80} />
+                    </Table>
                 </div>
 			</div>
         );

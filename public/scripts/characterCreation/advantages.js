@@ -1,5 +1,6 @@
 var React = require('react');
 var NumberAttribute = require('./numberAttribute.js');
+var VantageTable = require('../common/VantageTable.js');
 
 var Advantages = React.createClass({
 
@@ -13,9 +14,8 @@ var Advantages = React.createClass({
         return (
 			<div>
                 <h2>Advantages</h2>
-                <div>
-                	table
-            	</div>
+                <VantageTable data={[]} />
+                <button>Add Advantage</button>
             </div>
         );
   }
