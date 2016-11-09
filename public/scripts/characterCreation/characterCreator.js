@@ -141,7 +141,9 @@ var CharacterCreator = React.createClass({
         		perMod:0,
         		bsMod:0,
         		bmMod:0
-        	}
+        	},
+        	advantages:[],
+        	disadvantages:[]
         };
         
     },
@@ -227,6 +229,24 @@ var CharacterCreator = React.createClass({
     	um = {...um, bmMod:newMod};
     	this.setState({userMods:um});
     },
+    handleAdvantageAdd: function(advantage) {
+    	var data=[...this.state.advantages, advantage];
+    	this.setState({advantages:data});
+    },
+    handleAdvantageRemove: function(index) {
+    	var data = [...this.state.advantages];
+        data.splice(index, 1);
+        this.setState({advantages:data});
+    },
+    handleDisadvantageAdd: function(disadvantage) {
+    	var data=[...this.state.disadvantages, disadvantage];
+    	this.setState({disadvantages:data});
+    },
+    handleDisadvantageRemove: function(index) {
+    	var data = [...this.state.disadvantages];
+        data.splice(index, 1);
+        this.setState({disadvantages:data});
+    },
     render: function() {
     	const secChar = calcSecAttrs(this.state.basicAttributes, this.state.userMods);
     	const basicCost = calcBasicCost(this.state.basicAttributes);
@@ -285,8 +305,14 @@ var CharacterCreator = React.createClass({
 					onBsChange={this.handleBsChange}
 					onBmChange={this.handleBmChange} />
 				<Background />
-				<Advantages />
-				<Disadvantages />
+				<Advantages
+					advantages={this.state.advantages}
+					onAddClick={this.handleAdvantageAdd}
+					onRemoveClick={this.handleAdvantageRemove}/>
+				<Disadvantages
+					disadvantages={this.state.disadvantages}
+					onAddClick={this.handleDisadvantageAdd}
+					onRemoveClick={this.handleDisadvantageRemove}/>
 				<Skills />
 				<Spells />
 				<Inventory />

@@ -6,13 +6,7 @@ var Advantages = React.createClass({
     getInitialState: function() {
         return {
             name:'',
-            cost:0,
-            advantages:[
-                {
-                    name:'Steel Bones',
-                    cost:30
-                }
-            ]
+            cost:0
         };
         
     },
@@ -36,31 +30,26 @@ var Advantages = React.createClass({
             cost:cost
         };
 
-        var data=[...this.state.advantages, newAdv];
+        this.props.onAddClick(newAdv);
 
-        this.setState({advantages:data, name:'', cost:0})
-    },
-    handleRemoveClick: function(e, index) {
-        var data = [...this.state.advantages];
-        data.splice(index, 1);
-        this.setState({advantages:data});
+        this.setState({name:'', cost:0})
     },
     render: function() {
         return (
 			<div>
                 <h2>Advantages</h2>
                 <Table
-                    rowsCount={this.state.advantages.length}
+                    rowsCount={this.props.advantages.length}
                     rowHeight={30}
                     width={354}
-                    height={this.state.advantages.length*30 + 30 + 30 + 2}
+                    height={this.props.advantages.length*30 + 30 + 30 + 2}
                     headerHeight={30}
                     footerHeight={30}>
                     <Column
                         header={<Cell>Name</Cell>}
                       cell={props => (
                           <Cell {...props}>
-                            {this.state.advantages[props.rowIndex].name}
+                            {this.props.advantages[props.rowIndex].name}
                           </Cell>
                         )}
                       footer={<Cell>
@@ -74,7 +63,7 @@ var Advantages = React.createClass({
                         header={<Cell>Cost</Cell>}
                       cell={props => (
                           <Cell {...props}>
-                            {this.state.advantages[props.rowIndex].cost}
+                            {this.props.advantages[props.rowIndex].cost}
                           </Cell>
                         )}
                       footer={<Cell>
@@ -87,7 +76,7 @@ var Advantages = React.createClass({
                       width={80} />
                       <Column
                         cell={props => (
-                          <Cell><button onClick={(e) => this.handleRemoveClick(e, props.rowIndex)}>Remove</button></Cell>
+                          <Cell><button onClick={(e) => this.props.onRemoveClick(props.rowIndex)}>Remove</button></Cell>
                         )}
                         footer={<Cell>
                           <button onClick={(e) => this.handleAddClick(e)}>Add</button>
