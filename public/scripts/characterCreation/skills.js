@@ -75,12 +75,20 @@ var Skills = React.createClass({
 
     getInitialState: function() {
         return {
-            myData:[{
+            attrs:{
+                st:10,
+                dx:11,
+                iq:12,
+                ht:13
+            },
+            newName:'',
+            newAttr:'',
+            newDiff:'',
+            skills:[{
                 name:'Accounting',
                 attribute:'IQ',
                 difficulty:'Hard',
                 relativeLevel:-2,
-                level:10,
                 cost:1,
                 page:'174',
                 description:'This is the ability to keep books of account, to examine the condition of a business, etc. A successful Accounting roll (requires at least two hours of study, and possibly months to audit a large corporation) can tell you whether financial records are correct, and possibly reveal evidence of forgery, tampering, and similar criminal activity.'
@@ -90,7 +98,6 @@ var Skills = React.createClass({
                 attribute:'HT',
                 difficulty:'Average',
                 relativeLevel:-1,
-                level:12,
                 cost:1,
                 page:'174',
                 description:'This is the skill of running a large organization. It is often a prerequisite for high Rank (p. 29). A successful Administration roll gives you a +2 reaction bonus when dealing with a bureaucrat, and allows you to predict the best way to go about dealing with a bureaucracy.'
@@ -100,7 +107,6 @@ var Skills = React.createClass({
                 attribute:'DX',
                 difficulty:'Easy',
                 relativeLevel:0,
-                level:11,
                 cost:1,
                 page:'182',
                 description:'This is the ability to ride a bicycle long distances, at high speeds, in rallies, etc. Roll at +4 if all you want to do is struggle along without falling off. An IQ-based Bicycling roll allows you to make simple repairs, assuming tools and parts are available.'
@@ -110,59 +116,29 @@ var Skills = React.createClass({
                 attribute:'ST',
                 difficulty:'Very Hard',
                 relativeLevel:-3,
-                level:7,
                 cost:1,
                 page:'182',
                 description:'This is the ability to ride a bicycle long distances, at high speeds, in rallies, etc. Roll at +4 if all you want to do is struggle along without falling off. An IQ-based Bicycling roll allows you to make simple repairs, assuming tools and parts are available.'
-            }],
-            attrs:{
-                st:10,
-                dx:11,
-                iq:12,
-                ht:13
-            },
-            newName:'',
-            newAttr:'',
-            newDiff:''
+            }]
         };
         
     },
+    calcLevel: function(skill) {
+        var base = getAttrValue(skill.attribute, this.state.attrs);
+        var level = base + skill.relativeLevel;
+        return level;
+    },
     handleRelLevelChange: function(value, index) {
         value = Number(value);
-        var data = this.state.myData;
+        var data = [...this.state.skills];
         var row = data[index];
         var diffModifier = getDiffModifier(row.difficulty);
         if(value < diffModifier) {
             return;
         }
-        var base = getAttrValue(row.attribute, this.state.attrs);
-        var level = base + value;
-        var cost = calcSkillCostRelative({relativeLevel:value, difficulty:row.difficulty});
-        row.cost = cost;
-        row.level = level;
         row.relativeLevel = value;
 
-        this.setState({myData:data});
-    },
-    handleLevelChange: function(value, index) {
-        value = Number(value);
-        var data = this.state.myData;
-        var row = data[index];
-        var base = getAttrValue(row.attribute, this.state.attrs);
-        var diffModifier = getDiffModifier(row.difficulty);
-
-        if(value < base + diffModifier) {
-            return;
-        }
-
-        var relLevel = value - base;
-        var cost = calcSkillCostRelative({relativeLevel:relLevel, difficulty:row.difficulty});
-        
-        row.cost = cost;
-        row.level = value;
-        row.relativeLevel = relLevel;
-
-        this.setState({myData:data});
+        this.setState({skills:data});
     },
     handleNewNameChange: function (e) {
         this.setState({newName:e.target.value});
@@ -174,9 +150,9 @@ var Skills = React.createClass({
         this.setState({newDiff:e.target.value});
     },
     handleRemoveClick: function(e, index) {
-        var data = [...this.state.myData];
+        var data = [...this.state.skills];
         var removedItem = data.splice(index, 1);
-        this.setState({myData:data});
+        this.setState({skills:data});
     },
     handleAddClick: function (e) {
         var diff = this.state.newDiff;
@@ -188,9 +164,7 @@ var Skills = React.createClass({
         }
 
         var diffModifier = getDiffModifier(diff);
-        var base = getAttrValue(attr, this.state.attrs);
         var relLevel = diffModifier;
-        var level = base + relLevel;
         var cost = calcSkillCostRelative({relativeLevel:relLevel, difficulty:diff});
 
         var newSkill = {
@@ -198,31 +172,30 @@ var Skills = React.createClass({
             attribute:attr,
             difficulty:diff,
             relativeLevel:relLevel,
-            level:level,
             cost:cost
         };
 
-        var data = [...this.state.myData, newSkill];
+        var data = [...this.state.skills, newSkill];
         //data.push(newSkill);
 
-        this.setState({myData:data, newDiff:'', newName:'', newAttr:''});
+        this.setState({skills:data, newDiff:'', newName:'', newAttr:''});
     },
     render: function() {
         return (
 			<div>
                 <h2>Skills</h2>
                 <Table
-                    rowsCount={this.state.myData.length}
+                    rowsCount={this.state.skills.length}
                     rowHeight={30}
                     footerHeight={30}
                     width={674}
-                    height={this.state.myData.length*30 + 30 + 30 + 2}
+                    height={this.state.skills.length*30 + 30 + 30 + 2}
                     headerHeight={30}>
                     <Column
                         header={<Cell>Name</Cell>}
                         cell={props => (
                             <Cell {...props}>
-                              {this.state.myData[props.rowIndex].name}
+                              {this.state.skills[props.rowIndex].name}
                             </Cell>
                         )}
                         footer={<Cell>
@@ -236,7 +209,7 @@ var Skills = React.createClass({
                         header={<Cell>Attr</Cell>}
                         cell={props => (
                             <Cell {...props}>
-                              {this.state.myData[props.rowIndex].attribute}
+                              {this.state.skills[props.rowIndex].attribute}
                             </Cell>
                         )}
                         footer={<Cell>
@@ -250,7 +223,7 @@ var Skills = React.createClass({
                         header={<Cell>Diff</Cell>}
                         cell={props => (
                             <Cell {...props}>
-                              {this.state.myData[props.rowIndex].difficulty}
+                              {this.state.skills[props.rowIndex].difficulty}
                             </Cell>
                         )}
                         footer={<Cell>
@@ -266,7 +239,7 @@ var Skills = React.createClass({
                             <Cell {...props}>
                               <input
                                 type="number"
-                                value = {this.state.myData[props.rowIndex].relativeLevel}
+                                value = {this.state.skills[props.rowIndex].relativeLevel}
                                 style={{width:'50px'}}
                                 onChange={(e) => this.handleRelLevelChange(e.target.value, props.rowIndex)} />
                             </Cell>
@@ -276,11 +249,7 @@ var Skills = React.createClass({
                         header={<Cell>Level</Cell>}
                         cell={props => (
                             <Cell {...props}>
-                              <input
-                                type="number"
-                                value = {this.state.myData[props.rowIndex].level}
-                                style={{width:'50px'}}
-                                onChange={(e) => this.handleLevelChange(e.target.value, props.rowIndex)} />
+                              {this.calcLevel(this.state.skills[props.rowIndex])}
                             </Cell>
                         )}
                         width={80} />
@@ -288,7 +257,7 @@ var Skills = React.createClass({
                         header={<Cell>Cost</Cell>}
                         cell={props => (
                             <Cell {...props}>
-                              {calcSkillCostRelative(this.state.myData[props.rowIndex])}
+                              {calcSkillCostRelative(this.state.skills[props.rowIndex])}
                             </Cell>
                         )}
                         width={80} />

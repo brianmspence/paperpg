@@ -234,9 +234,7 @@ var CharacterCreator = React.createClass({
 
         return (
 			<div>
-				<a href="index.html">Home</a>
 				<h1>Character Creator</h1>
-				<div style={navBarStyle}>Physical Features | Basic Attributes | Secondary Characteristics | Background | Advantages | Disadvantages | Skills | Spells | Inventory | Notes | Summary</div>
 				<Header pointsTotal={secChar.sum + basicCost.sum} />
 				<PhysicalFeatures
 					height={this.state.physicalFeatures.height}
@@ -293,7 +291,6 @@ var CharacterCreator = React.createClass({
 				<Spells />
 				<Inventory />
 				<Notes />
-				<Summary />
 			</div>
         );
   }
