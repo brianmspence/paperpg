@@ -15,6 +15,7 @@ var Background = React.createClass({
             langName:'',
             spoken:'Native',
             written:'Native',
+            culName:'',
             languages:[
               {
                 name:'Common',
@@ -25,6 +26,11 @@ var Background = React.createClass({
                 name:'French',
                 spoken:'Broken',
                 written:'None'
+              }
+            ],
+            cultures:[
+              {
+                name:'Local'
               }
             ]
         };
@@ -106,6 +112,25 @@ var Background = React.createClass({
         var data = [...this.state.languages];
         var removedItem = data.splice(index, 1);
         this.setState({languages:data});
+    },
+    handleCulNameChange: function(e) {
+      this.setState({culName:e.target.value});
+    },
+    handleCulAddClick: function (e) {
+      var name = this.state.culName;
+
+      if(name === '') {
+        return;
+      }
+
+      var newCulture = {name:name};
+      var data = [...this.state.cultures, newCulture];
+      this.setState({cultures:data, culName:''});
+    },
+    handleCulRemoveClick: function(e, index) {
+        var data = [...this.state.cultures];
+        var removedItem = data.splice(index, 1);
+        this.setState({cultures:data,});
     },
     render: function() {
         return (
@@ -192,19 +217,38 @@ var Background = React.createClass({
                 <div>
                     <h3>Culture Familiarities</h3>
                     <Table
-                        rowsCount={1}
+                        rowsCount={this.state.cultures.length}
                         rowHeight={30}
-                        width={280}
-                        height={60}
-                        headerHeight={30}>
+                        width={354}
+                        height={this.state.cultures.length*30 + 30 + 30 + 2}
+                        headerHeight={30}
+                        footerHeight={30}>
                         <Column
                             header={<Cell>Culture</Cell>}
-                          cell={<Cell>Choice</Cell>}
+                          cell={props => (
+                              <Cell {...props}>
+                                {this.state.cultures[props.rowIndex].name}
+                              </Cell>
+                            )}
+                          footer={<Cell>
+                                    <input
+                                        type="text"
+                                        value={this.state.culName}
+                                        onChange={(e) => this.handleCulNameChange(e)} />
+                                </Cell>}
                           width={200} />
                           <Column
                             header={<Cell>Cost</Cell>}
-                          cell={<Cell>0</Cell>}
+                          cell={<Cell>{'1 or 2'}</Cell>}
                           width={80} />
+                          <Column
+                            cell={props => (
+                              <Cell><button onClick={(e) => this.handleCulRemoveClick(e, props.rowIndex)}>Remove</button></Cell>
+                            )}
+                            footer={<Cell>
+                              <button onClick={(e) => this.handleCulAddClick(e)}>Add</button>
+                            </Cell>}
+                            width={74} />    
                     </Table>
                 </div>
 			</div>
