@@ -7,78 +7,13 @@ var Background = React.createClass({
 
     getInitialState: function() {
         return {
-        	TL:1,
-            Status:0,
-            Rep:0,
-            Wealth:0,
-            Rank:0,
             langName:'',
             spoken:'Native',
             written:'Native',
             culName:'',
-            languages:[
-              {
-                name:'Common',
-                spoken:'Native',
-                written:'Native'
-              },
-              {
-                name:'French',
-                spoken:'Broken',
-                written:'None'
-              }
-            ],
-            cultures:[
-              {
-                name:'Local'
-              }
-            ]
+            similarity:'Similar'
         };
         
-    },
-    calcLangCost: function(lang, index) {
-      var getCost = function(level) {
-        switch(level) {
-          case 'Native':
-            return 3;
-            break;
-          case 'Accented':
-            return 2;
-            break;
-          case 'Broken':
-            return 1;
-            break;
-          case 'None':
-            return 0;
-            break;
-          default:
-            return 0;
-        }
-        return 0;
-      };
-      var spokenCost = getCost(lang.spoken);
-      var writtenCost = getCost(lang.written);
-      var cost = spokenCost + writtenCost;
-      if(index === 0) {
-        cost = cost - 6;
-      }
-
-      return cost;
-    },
-    handleTLChange: function(e) {
-    	this.setState({TL: e.target.value});
-    },
-    handleStatusChange: function(e) {
-        this.setState({Status: e.target.value});
-    },
-    handleRepChange: function(e) {
-        this.setState({Rep: e.target.value});
-    },
-    handleWealthChange: function(e) {
-        this.setState({Wealth: e.target.value});
-    },
-    handleRankChange: function(e) {
-        this.setState({Rank: e.target.value});
     },
     handleLangNameChange: function(e) {
       this.setState({langName:e.target.value});
@@ -103,18 +38,15 @@ var Background = React.createClass({
         spoken:spoken,
         written:written
       };
+      this.props.onLanguageAddClick(newLanguage);
 
-      var data = [...this.state.languages, newLanguage];
-
-      this.setState({languages:data, langName:'', spoken:'Native', written:'Native'});
-    },
-    handleLangRemoveClick: function(e, index) {
-        var data = [...this.state.languages];
-        var removedItem = data.splice(index, 1);
-        this.setState({languages:data});
+      this.setState({langName:'', spoken:'Native', written:'Native'});
     },
     handleCulNameChange: function(e) {
       this.setState({culName:e.target.value});
+    },
+    handleSimilarityChange: function(e) {
+      this.setState({similarity:e.target.value});
     },
     handleCulAddClick: function (e) {
       var name = this.state.culName;
@@ -123,38 +55,48 @@ var Background = React.createClass({
         return;
       }
 
-      var newCulture = {name:name};
-      var data = [...this.state.cultures, newCulture];
-      this.setState({cultures:data, culName:''});
-    },
-    handleCulRemoveClick: function(e, index) {
-        var data = [...this.state.cultures];
-        var removedItem = data.splice(index, 1);
-        this.setState({cultures:data,});
+      var cultureCost = 0;
+      if(this.props.data.cultures.length == 0) {
+        cultureCost = 0; //first is free
+      }
+      else if(this.state.similarity === 'Similar') {
+        cultureCost = 1;
+      }
+      else if(this.state.similarity === 'Alien') {
+        cultureCost = 2;
+      }
+
+      var newCulture = {name:name, cost:cultureCost};
+      this.props.onCultureAddClick(newCulture);
+
+      this.setState({culName:'', similarity:'Similar'});
     },
     render: function() {
+      const languages = this.props.data.languages;
+      const cultures = this.props.data.cultures;
+
         return (
 			<div>
                 <h2>Background</h2>
-                <NumberAttribute value={this.state.TL} onChange={this.handleTLChange} cost={this.props.TLCost} label="Tech Level" />
-                <NumberAttribute value={this.state.Status} onChange={this.handleStatusChange} cost={this.props.StatusCost} label="Status" />
-                <NumberAttribute value={this.state.Rep} onChange={this.handleRepChange} cost={this.props.RepCost} label="Reputation" />
-                <NumberAttribute value={this.state.Wealth} onChange={this.handleWealthChange} cost={this.props.WealthCost} label="Wealth" />
-                <NumberAttribute value={this.state.Rank} onChange={this.handleRankChange} cost={this.props.RankCost} label="Rank" />
+                <NumberAttribute value={this.props.data.TL} onChange={this.props.onTLChange} cost={this.props.TLCost} label="Tech Level Mod" />
+                <NumberAttribute value={this.props.data.Status} onChange={this.props.onStatusChange} cost={this.props.StatusCost} label="Status" />
+                <NumberAttribute value={this.props.data.Rep} onChange={this.props.onReputationChange} cost={this.props.RepCost} label="Reputation" />
+                <NumberAttribute value={this.props.data.Wealth} onChange={this.props.onWealthChange} cost={this.props.WealthCost} label="Wealth" />
+                <NumberAttribute value={this.props.data.Rank} onChange={this.props.onRankChange} cost={this.props.RankCost} label="Rank" />
                 <div>
                     <h3>Languages</h3>
                     <Table
-                        rowsCount={this.state.languages.length}
+                        rowsCount={languages.length}
                         rowHeight={30}
                         width={514}
-                        height={this.state.languages.length*30 + 30 + 30 + 2}
+                        height={languages.length*30 + 30 + 30 + 2}
                         headerHeight={30}
                         footerHeight={30}>
                         <Column
                             header={<Cell>Language</Cell>}
                           cell={props => (
                             <Cell {...props}>
-                              {this.state.languages[props.rowIndex].name}
+                              {languages[props.rowIndex].name}
                             </Cell>
                           )}
                           footer={<Cell>
@@ -168,7 +110,7 @@ var Background = React.createClass({
                             header={<Cell>Spoken</Cell>}
                             cell={props => (
                               <Cell {...props}>
-                                {this.state.languages[props.rowIndex].spoken}
+                                {languages[props.rowIndex].spoken}
                               </Cell>
                             )}
                             footer={<Cell>
@@ -184,7 +126,7 @@ var Background = React.createClass({
                             header={<Cell>Written</Cell>}
                             cell={props => (
                               <Cell {...props}>
-                                {this.state.languages[props.rowIndex].written}
+                                {languages[props.rowIndex].written}
                               </Cell>
                             )}
                             footer={<Cell>
@@ -200,13 +142,13 @@ var Background = React.createClass({
                             header={<Cell>Cost</Cell>}
                           cell={props => (
                               <Cell {...props}>
-                                {this.calcLangCost(this.state.languages[props.rowIndex], props.rowIndex)}
+                                {this.props.langCost(languages[props.rowIndex], props.rowIndex)}
                               </Cell>
                             )}
                           width={80} />
                           <Column
                             cell={props => (
-                              <Cell><button onClick={(e) => this.handleLangRemoveClick(e, props.rowIndex)}>Remove</button></Cell>
+                              <Cell><button onClick={(e) => this.props.onLanguageRemoveClick(props.rowIndex)}>Remove</button></Cell>
                             )}
                             footer={<Cell>
                               <button onClick={(e) => this.handleLangAddClick(e)}>Add</button>
@@ -217,17 +159,17 @@ var Background = React.createClass({
                 <div>
                     <h3>Culture Familiarities</h3>
                     <Table
-                        rowsCount={this.state.cultures.length}
+                        rowsCount={cultures.length}
                         rowHeight={30}
                         width={354}
-                        height={this.state.cultures.length*30 + 30 + 30 + 2}
+                        height={cultures.length*30 + 30 + 30 + 2}
                         headerHeight={30}
                         footerHeight={30}>
                         <Column
                             header={<Cell>Culture</Cell>}
                           cell={props => (
                               <Cell {...props}>
-                                {this.state.cultures[props.rowIndex].name}
+                                {cultures[props.rowIndex].name}
                               </Cell>
                             )}
                           footer={<Cell>
@@ -239,11 +181,21 @@ var Background = React.createClass({
                           width={200} />
                           <Column
                             header={<Cell>Cost</Cell>}
-                          cell={<Cell>{'1 or 2'}</Cell>}
+                          cell={props => (
+                              <Cell {...props}>
+                                {cultures[props.rowIndex].cost}
+                              </Cell>
+                            )}
+                          footer={<Cell>
+                                      <select value={this.state.similarity} onChange={(e) => this.handleSimilarityChange(e)}>
+                                        <option value="Similar">Similar</option>
+                                        <option value="Alien">Alien</option>
+                                      </select>
+                                    </Cell>}
                           width={80} />
                           <Column
                             cell={props => (
-                              <Cell><button onClick={(e) => this.handleCulRemoveClick(e, props.rowIndex)}>Remove</button></Cell>
+                              <Cell><button onClick={(e) => this.props.onCultureRemoveClick(props.rowIndex)}>Remove</button></Cell>
                             )}
                             footer={<Cell>
                               <button onClick={(e) => this.handleCulAddClick(e)}>Add</button>

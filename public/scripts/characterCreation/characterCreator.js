@@ -211,6 +211,31 @@ var CharacterCreator = React.createClass({
         		bsMod:0,
         		bmMod:0
         	},
+        	background: {
+				TL:1,
+				Status:0,
+				Rep:0,
+				Wealth:0,
+				Rank:0,
+				languages:[
+					{
+						name:'Common',
+						spoken:'Native',
+						written:'Native'
+					},
+					{
+						name:'French',
+						spoken:'Broken',
+						written:'None'
+					}
+				],
+				cultures:[
+					{
+						name:'Local',
+						cost:0
+					}
+				]
+        	},
         	advantages:[],
         	disadvantages:[],
         	skills:[],
@@ -303,6 +328,47 @@ var CharacterCreator = React.createClass({
     	um = {...um, bmMod:newMod};
     	this.setState({userMods:um});
     },
+    handleTLChange: function(e) {
+    	var bg = {...this.state.background, TL: e.target.value};
+    	this.setState({background:bg});
+    },
+    handleStatusChange: function(e) {
+        var bg = {...this.state.background, Status: e.target.value};
+    	this.setState({background:bg});
+    },
+    handleRepChange: function(e) {
+        var bg = {...this.state.background, Rep: e.target.value};
+    	this.setState({background:bg});
+    },
+    handleWealthChange: function(e) {
+        var bg = {...this.state.background, Wealth: e.target.value};
+    	this.setState({background:bg});
+    },
+    handleRankChange: function(e) {
+        var bg = {...this.state.background, Rank: e.target.value};
+    	this.setState({background:bg});
+    },
+    handleLangAdd: function(language) {
+    	var data = [...this.state.background.languages, language];
+        this.setState({background:{...this.state.background, languages:data}});
+    },
+    handleLangRemove: function(index) {
+    	var data = [...this.state.background.languages];
+    	console.log(index);
+    	console.log(data);
+        data.splice(index, 1);
+        console.log(data);
+        this.setState({background:{...this.state.background, languages:data}});
+    },
+    handleCultureAdd: function(culture) {
+    	var data = [...this.state.background.cultures, culture];
+        this.setState({background:{...this.state.background, cultures:data}});
+    },
+    handleCultureRemove: function(index) {
+    	var data = [...this.state.background.cultures];
+        data.splice(index, 1);
+        this.setState({background:{...this.state.background, cultures:data}});
+    },
     handleAdvantageAdd: function(advantage) {
     	var data=[...this.state.advantages, advantage];
     	this.setState({advantages:data});
@@ -376,6 +442,35 @@ var CharacterCreator = React.createClass({
     	var data = [...this.state.spells];
         data.splice(index, 1);
         this.setState({spells:data});
+    },
+    calcLangCost: function(lang, index) {
+      var getCost = function(level) {
+        switch(level) {
+          case 'Native':
+            return 3;
+            break;
+          case 'Accented':
+            return 2;
+            break;
+          case 'Broken':
+            return 1;
+            break;
+          case 'None':
+            return 0;
+            break;
+          default:
+            return 0;
+        }
+        return 0;
+      };
+      var spokenCost = getCost(lang.spoken);
+      var writtenCost = getCost(lang.written);
+      var cost = spokenCost + writtenCost;
+      if(index === 0) {
+        cost = cost - 6;
+      }
+
+      return cost;
     },
     getPointsTotal: function() {
     	var cost = 0;
@@ -456,7 +551,18 @@ var CharacterCreator = React.createClass({
 					onPerChange={this.handlePerChange}
 					onBsChange={this.handleBsChange}
 					onBmChange={this.handleBmChange} />
-				<Background />
+				<Background
+					data={this.state.background}
+					onTLChange={this.handleTLChange}
+					onStatusChange={this.handleStatusChange}
+					onReputationChange={this.handleRepChange}
+					onWealthChange={this.handleWealthChange}
+					onRankChange={this.handleRankChange}
+					onLanguageAddClick={this.handleLangAdd}
+					onLanguageRemoveClick={this.handleLangRemove}
+					onCultureAddClick={this.handleCultureAdd}
+					onCultureRemoveClick={this.handleCultureRemove}
+					langCost={this.calcLangCost}/>
 				<Advantages
 					advantages={this.state.advantages}
 					onAddClick={this.handleAdvantageAdd}
