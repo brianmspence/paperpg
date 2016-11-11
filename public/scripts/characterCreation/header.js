@@ -1,33 +1,21 @@
 var React = require('react');
 
-var Header = React.createClass({
-
-    getInitialState: function() {
-        return {
-        	name:''
-        };
-        
-    },
-    handleNameChange: function(e) {
-    	this.setState({name: e.target.value});
-    },
-    render: function() {
-        return (
+function Header(props) {
+    return (
+		<div>
 			<div>
-				<div>
-					<span>Name</span>
-					<input type="text" value={this.state.name} onChange={this.handleNameChange}/>
-				</div>
-				<div>
-					<button>Add Template</button>
-				</div>
-				<div>
-					<span>Point Total: </span>
-					<span>{this.props.pointsTotal}</span>
-				</div>
+				<span>Name</span>
+				<input type="text" value={props.name} onChange={(e) => props.onNameChange(e)}/>
 			</div>
-        );
-  }
-});
+			<div>
+				<button>Add Template</button>
+			</div>
+			<div>
+				<span>Point Total: </span>
+				<span>{props.pointsTotal}</span>
+			</div>
+		</div>
+    );
+}
 
 module.exports = Header;

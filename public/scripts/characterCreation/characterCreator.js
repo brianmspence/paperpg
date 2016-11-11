@@ -189,6 +189,7 @@ var CharacterCreator = React.createClass({
 
     getInitialState: function() {
         return {
+        	name:'',
         	physicalFeatures: {
         		height:'',
 	        	weight:'',
@@ -216,6 +217,9 @@ var CharacterCreator = React.createClass({
         	spells:[]
         };
         
+    },
+    handleNameChange: function(e) {
+    	this.setState({name: e.target.value});
     },
     updatePhysicalFeatures: function(prop, value) {
     	var pf = this.state.physicalFeatures;
@@ -376,6 +380,8 @@ var CharacterCreator = React.createClass({
     getPointsTotal: function() {
     	var cost = 0;
 
+    	cost = calcAppearanceCost(this.state.physicalFeatures.appearance);
+
     	//Sum spells and skills
     	var skills = [...this.state.skills, ...this.state.spells];
     	for (var i = 0; i < skills.length; i++) {
@@ -399,7 +405,9 @@ var CharacterCreator = React.createClass({
         return (
 			<div>
 				<h1>Character Creator</h1>
-				<Header pointsTotal={total + secChar.sum + basicCost.sum} />
+				<Header
+					pointsTotal={total + secChar.sum + basicCost.sum}
+					onNameChange={this.handleNameChange}/>
 				<PhysicalFeatures
 					height={this.state.physicalFeatures.height}
 					weight={this.state.physicalFeatures.weight}
