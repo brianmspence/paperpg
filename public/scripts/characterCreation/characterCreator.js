@@ -117,6 +117,74 @@ function calcAppearanceCost(appearance) {
 	return appearanceCost;
 }
 
+function getDiffModifier(difficulty) {
+    var diffModifier = 0;
+    switch (difficulty) {
+        case 'Easy':
+            diffModifier = 0;
+            break;
+        case 'Average':
+            diffModifier = -1;
+            break;
+        case 'Hard':
+            diffModifier = -2;
+            break;
+        case 'Very Hard':
+            diffModifier = -3;
+            break;
+        default:
+            diffModifier = 0;
+    } 
+
+    return diffModifier;
+}
+
+function getAttrValue(attribute, attrs) {
+    var value = 0;
+    switch (attribute) {
+        case 'ST':
+            value = attrs.ST;
+            break;
+        case 'DX':
+            value = attrs.DX;
+            break;
+        case 'IQ':
+            value = attrs.IQ;
+            break;
+        case 'HT':
+            value = attrs.HT;
+            break;
+        default:
+            value = 0;
+    } 
+
+    return value;
+}
+
+var calcSkillCostRelative = function(data) {
+    var relativeLevel = data.relativeLevel;
+    var difficulty = data.difficulty;
+
+    var diffModifier = getDiffModifier(difficulty);
+
+    var cost = 0;
+
+    if(relativeLevel < diffModifier) {
+        cost = NaN;
+    }
+    if(relativeLevel == diffModifier) {
+        cost = 1;
+    }
+    else if (relativeLevel == diffModifier + 1) {
+        cost = 2;
+    }
+    else {
+        cost = 4 * (relativeLevel - (diffModifier + 1));
+    }
+
+    return cost;
+};
+
 var CharacterCreator = React.createClass({
 
     getInitialState: function() {
@@ -143,7 +211,9 @@ var CharacterCreator = React.createClass({
         		bmMod:0
         	},
         	advantages:[],
-        	disadvantages:[]
+        	disadvantages:[],
+        	skills:[],
+        	spells:[]
         };
         
     },
@@ -247,15 +317,89 @@ var CharacterCreator = React.createClass({
         data.splice(index, 1);
         this.setState({disadvantages:data});
     },
+    handleSkillRLChange: function(value, index) {
+        value = Number(value);
+        var data = [...this.state.skills];
+        var row = data[index];
+        var diffModifier = getDiffModifier(row.difficulty);
+        if(value < diffModifier) {
+            return;
+        }
+        row.relativeLevel = value;
+
+        this.setState({skills:data});
+    },
+    calcLevel: function(skill) {
+        var base = getAttrValue(skill.attribute, this.state.basicAttributes);
+        var level = base + skill.relativeLevel;
+        return level;
+    },
+    handleSkillAdd: function(skill) {
+    	var diffModifier = getDiffModifier(skill.difficulty);
+    	skill = {...skill, relativeLevel:diffModifier};
+
+    	var data=[...this.state.skills, skill];
+    	this.setState({skills:data});
+    },
+    handleSkillRemove: function(index) {
+    	var data = [...this.state.skills];
+        data.splice(index, 1);
+        this.setState({skills:data});
+    },
+    calcSpellLevel: function(spell) {
+        return this.state.basicAttributes.IQ + spell.relativeLevel;
+    },
+    handleSpellRLChange: function(value, index) {
+        value = Number(value);
+        var data = [...this.state.spells];
+        var row = data[index];
+        var diffModifier = getDiffModifier(row.difficulty);
+        if(value < diffModifier) {
+            return;
+        }
+        row.relativeLevel = value;
+
+        this.setState({spells:data});
+    },
+    handleSpellAdd: function(spell) {
+		var diffModifier = getDiffModifier(spell.difficulty);
+    	spell = {...spell, relativeLevel:diffModifier};
+
+    	var data=[...this.state.spells, spell];
+    	this.setState({spells:data});
+    },
+    handleSpellRemove: function(index) {
+    	var data = [...this.state.spells];
+        data.splice(index, 1);
+        this.setState({spells:data});
+    },
+    getPointsTotal: function() {
+    	var cost = 0;
+
+    	//Sum spells and skills
+    	var skills = [...this.state.skills, ...this.state.spells];
+    	for (var i = 0; i < skills.length; i++) {
+    		cost = cost + calcSkillCostRelative(skills[i]);
+    	}
+
+    	//Sum advantages and disadvantages
+    	var advantages = [...this.state.advantages, ...this.state.disadvantages];
+    	for (var i = 0; i < advantages.length; i++) {
+    		cost = cost + advantages[i].cost;
+    	}
+
+    	return cost;
+    },
     render: function() {
     	const secChar = calcSecAttrs(this.state.basicAttributes, this.state.userMods);
     	const basicCost = calcBasicCost(this.state.basicAttributes);
     	const appearanceCost = calcAppearanceCost(this.state.physicalFeatures.appearance);
+    	const total = this.getPointsTotal();
 
         return (
 			<div>
 				<h1>Character Creator</h1>
-				<Header pointsTotal={secChar.sum + basicCost.sum} />
+				<Header pointsTotal={total + secChar.sum + basicCost.sum} />
 				<PhysicalFeatures
 					height={this.state.physicalFeatures.height}
 					weight={this.state.physicalFeatures.weight}
@@ -313,8 +457,20 @@ var CharacterCreator = React.createClass({
 					disadvantages={this.state.disadvantages}
 					onAddClick={this.handleDisadvantageAdd}
 					onRemoveClick={this.handleDisadvantageRemove}/>
-				<Skills />
-				<Spells />
+				<Skills
+					skills={this.state.skills}
+					cost={calcSkillCostRelative}
+					level={this.calcLevel}
+					onRLChange={this.handleSkillRLChange}
+					onAddClick={this.handleSkillAdd}
+					onRemoveClick={this.handleSkillRemove}/>
+				<Spells
+					spells={this.state.spells}
+					cost={calcSkillCostRelative}
+					level={this.calcSpellLevel}
+					onRLChange={this.handleSpellRLChange}
+					onAddClick={this.handleSpellAdd}
+					onRemoveClick={this.handleSpellRemove}/>
 				<Inventory />
 				<Notes />
 			</div>
