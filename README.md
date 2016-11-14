@@ -8,7 +8,7 @@ Starting with:
 
 To install and run:
 * npm install
-* npm start
+* npm run watch
 * node index.js
-* open browser and navigate to http://localhost:3000/gurps.html
+* open browser and navigate to http://localhost:3000/
 
