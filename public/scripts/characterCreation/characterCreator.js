@@ -212,29 +212,19 @@ var CharacterCreator = React.createClass({
         		bmMod:0
         	},
         	background: {
-				TL:1,
+				TL:0,
 				Status:0,
 				Rep:0,
-				Wealth:0,
+				Wealth:'Average',
 				Rank:0,
 				languages:[
 					{
 						name:'Common',
 						spoken:'Native',
 						written:'Native'
-					},
-					{
-						name:'French',
-						spoken:'Broken',
-						written:'None'
 					}
 				],
-				cultures:[
-					{
-						name:'Local',
-						cost:0
-					}
-				]
+				cultures:[]
         	},
         	advantages:[],
         	disadvantages:[],
@@ -562,7 +552,12 @@ var CharacterCreator = React.createClass({
 					onLanguageRemoveClick={this.handleLangRemove}
 					onCultureAddClick={this.handleCultureAdd}
 					onCultureRemoveClick={this.handleCultureRemove}
-					langCost={this.calcLangCost}/>
+					langCost={this.calcLangCost}
+					TLCost={this.state.background.TL*5}
+					StatusCost={this.state.background.Status*5}
+					RepCost={0}
+					WealthCost={0}
+					RankCost={this.state.background.Rank*5}/>
 				<Advantages
 					advantages={this.state.advantages}
 					onAddClick={this.handleAdvantageAdd}

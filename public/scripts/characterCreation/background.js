@@ -74,14 +74,31 @@ var Background = React.createClass({
     render: function() {
       const languages = this.props.data.languages;
       const cultures = this.props.data.cultures;
-
+      var millionaireLevel = null;
+      if (this.props.data.Wealth === 'Multimillionaire') {
+          millionaireLevel = (<input type="number" onChange={(e) => console.log(e.target.value)}/>);
+      }
         return (
 			<div>
                 <h2>Background</h2>
                 <NumberAttribute value={this.props.data.TL} onChange={this.props.onTLChange} cost={this.props.TLCost} label="Tech Level Mod" />
                 <NumberAttribute value={this.props.data.Status} onChange={this.props.onStatusChange} cost={this.props.StatusCost} label="Status" />
                 <NumberAttribute value={this.props.data.Rep} onChange={this.props.onReputationChange} cost={this.props.RepCost} label="Reputation" />
-                <NumberAttribute value={this.props.data.Wealth} onChange={this.props.onWealthChange} cost={this.props.WealthCost} label="Wealth" />
+                <div>
+                    <span>Wealth</span>
+                    <select value={this.props.data.Wealth} onChange={(e) => this.props.onWealthChange(e)}>
+                      <option value="Dead Broke">Dead Broke</option>
+                      <option value="Poor">Poor</option>
+                      <option value="Struggling">Struggling</option>
+                      <option value="Average">Average</option>
+                      <option value="Comfortable">Comfortable</option>
+                      <option value="Wealthy">Wealthy</option>
+                      <option value="Very Wealthy">Very Wealthy</option>
+                      <option value="Multimillionaire">Multimillionaire</option>
+                    </select>
+                    {millionaireLevel}
+                    <span>{this.props.WealthCost}</span>
+                </div>
                 <NumberAttribute value={this.props.data.Rank} onChange={this.props.onRankChange} cost={this.props.RankCost} label="Rank" />
                 <div>
                     <h3>Languages</h3>
