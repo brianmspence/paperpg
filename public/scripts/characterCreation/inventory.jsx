@@ -3,21 +3,19 @@ var NumberAttribute = require('./numberAttribute.jsx');
 
 var Inventory = React.createClass({
 
-    getInitialState: function() {
-        return {
+  getInitialState: function() {
+    return {
 
-        };
-        
-    },
-    render: function() {
-        return (
-			<div>
-                <h2>Inventory</h2>
-                <div>
-                	table
-            	</div>
-            </div>
-        );
+    };
+
+  },
+  render: function() {
+    return (
+      <div>
+        <h2>Inventory</h2>
+        <div>table</div>
+      </div>
+    );
   }
 });
 

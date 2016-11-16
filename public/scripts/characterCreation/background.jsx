@@ -6,7 +6,7 @@ var Reputation = require('./reputation.jsx');
 var Languages = require('./languages.jsx');
 var Cultures = require('./cultures.jsx');
 
-function Background(props) {
+function Background (props){
   var millionaireLevel = null;
   if (props.data.Wealth === 'Multimillionaire') {
     millionaireLevel = (<input type="number" onChange={(e) => console.log(e.target.value)}/>);

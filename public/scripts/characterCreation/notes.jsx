@@ -3,21 +3,19 @@ var NumberAttribute = require('./numberAttribute.jsx');
 
 var Notes = React.createClass({
 
-    getInitialState: function() {
-        return {
+  getInitialState: function() {
+    return {
 
-        };
-        
-    },
-    render: function() {
-        return (
-			<div>
-                <h2>Notes</h2>
-                <div>
-                	text Area
-            	</div>
-            </div>
-        );
+    };
+
+  },
+  render: function() {
+    return (
+      <div>
+        <h2>Notes</h2>
+        <div>text Area</div>
+      </div>
+    );
   }
 });
 
