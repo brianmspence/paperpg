@@ -4,7 +4,7 @@ var ReactDOM = require('react-dom');
 var Advantages = require('./advantages.jsx');
 var Background = require('./background.jsx');
 var BasicAttributes = require('./basicAttributes.jsx');
-var DamageTable = require('./damageTable.jsx');
+var DamageTable = require('./damageTable.js');
 var Disadvantages = require('./disadvantages.jsx');
 var Header = require('./header.jsx');
 var Inventory = require('./inventory.jsx');
@@ -190,6 +190,7 @@ var CharacterCreator = React.createClass({
     getInitialState: function() {
         return {
           name:'',
+          campaignTL:'0',
           physicalFeatures: {
             height:'',
             weight:'',
@@ -212,26 +213,25 @@ var CharacterCreator = React.createClass({
             bmMod:0
           },
           background: {
-        TL:0,
-        Status:0,
-        Wealth:'Average',
-        ranks:[],
-        reputations:[],
-        languages:[
-          {
-            name:'Common',
-            spoken:'Native',
-            written:'Native'
-          }
-        ],
-        cultures:[]
+            TL:0,
+            Status:0,
+            Wealth:'Average',
+            ranks:[],
+            reputations:[],
+            languages:[
+              {
+                name:'Common',
+                spoken:'Native',
+                written:'Native'
+              }
+            ],
+            cultures:[]
           },
           advantages:[],
           disadvantages:[],
           skills:[],
           spells:[]
         };
-        
     },
     handleNameChange: function(e) {
       this.setState({name: e.target.value});
@@ -466,6 +466,9 @@ var CharacterCreator = React.createClass({
     calcRankCost: function(rank) {
       return 5 * rank.level;
     },
+    handleCampaignTLChange: function(e) {
+      this.setState({campaignTL:e.target.value});
+    },
     getPointsTotal: function() {
       var cost = 0;
 
@@ -495,8 +498,11 @@ var CharacterCreator = React.createClass({
       <div>
         <h1>Character Creator</h1>
         <Header
+          name={this.state.name}
+          techLevel={this.state.campaignTL}
           pointsTotal={total + secChar.sum + basicCost.sum}
-          onNameChange={this.handleNameChange}/>
+          onNameChange={this.handleNameChange}
+          onTechLevelChange={this.handleCampaignTLChange}/>
         <PhysicalFeatures
           height={this.state.physicalFeatures.height}
           weight={this.state.physicalFeatures.weight}

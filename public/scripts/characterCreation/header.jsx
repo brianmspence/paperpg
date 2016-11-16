@@ -5,14 +5,14 @@ function Header(props) {
     <div>
       <div>
         <span>Name</span>
-        <input type="text" value={props.name} onChange={(e) => props.onNameChange(e)}/>
+        <input type="text" value={props.name} onChange={(e) => props.onNameChange(e)} />
       </div>
       <div>
         <button>Add Template</button>
       </div>
       <div>
         <span>Campaign Tech Level:</span>
-        <input type="number" min={0}/>
+        <input type="number" min={0} value={props.techLevel} onChange={(e) => props.onTechLevelChange(e)} />
       </div>
       <div>
         <span>Point Total: </span>
