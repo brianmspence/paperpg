@@ -85,6 +85,8 @@ var Rank = React.createClass({
               footer={<Cell>
                   <input
                       type="number"
+                      min={0}
+                      max={99}
                       value={this.state.level}
                       onChange={(e) => this.handleLevelChange(e)} />
               </Cell>}

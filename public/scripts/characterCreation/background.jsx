@@ -35,7 +35,10 @@ function Background (props){
         cost={props.rankCost}
         onRankAddClick={props.onRankAddClick}
         onRankRemoveClick={props.onRankRemoveClick}/>
-      <Reputation />
+      <Reputation
+        reputations={props.data.reputations}
+        onAdd={props.onRepAdd}
+        onRemove={props.onRepRemove} />
       <Languages
         onLanguageAddClick={props.onLanguageAddClick}
         onLanguageRemoveClick={props.onLanguageRemoveClick}

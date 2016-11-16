@@ -469,6 +469,15 @@ var CharacterCreator = React.createClass({
     handleCampaignTLChange: function(e) {
       this.setState({campaignTL:e.target.value});
     },
+    handleRepAdd: function(rep) {
+      var data = [...this.state.background.reputations, rep];
+      this.setState({background:{...this.state.background, reputations:data}});
+    },
+    handleRepRemove: function(index) {
+      var data = [...this.state.background.reputations];
+      data.splice(index, 1);
+      this.setState({background:{...this.state.background, reputations:data}});
+    },
     getPointsTotal: function() {
       var cost = 0;
 
@@ -566,7 +575,9 @@ var CharacterCreator = React.createClass({
           WealthCost={0}
           onRankAddClick={this.handleRankAdd}
           onRankRemoveClick={this.handleRankRemove}
-          rankCost={this.calcRankCost}/>
+          rankCost={this.calcRankCost}
+          onRepAdd={this.handleRepAdd}
+          onRepRemove={this.handleRepRemove}/>
         <Advantages
           advantages={this.state.advantages}
           onAddClick={this.handleAdvantageAdd}
