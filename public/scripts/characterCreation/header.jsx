@@ -11,6 +11,10 @@ function Header(props) {
 				<button>Add Template</button>
 			</div>
 			<div>
+				<span>Campaign Tech Level:</span>
+				<input type="number" min={0}/>
+			</div>
+			<div>
 				<span>Point Total: </span>
 				<span>{props.pointsTotal}</span>
 			</div>

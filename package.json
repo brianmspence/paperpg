@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "browserify ./public/scripts/characterCreator.js -t babelify -o ./public/scripts/bundle.js",
-    "watch": "watchify ./public/scripts/characterCreation/characterCreator.js -t babelify -o ./public/scripts/characterCreation/bundle.js"
+    "start": "browserify ./public/scripts/characterCreator.jsx -t babelify -o ./public/scripts/bundle.js",
+    "watch": "watchify ./public/scripts/characterCreation/characterCreator.jsx -t babelify -o ./public/scripts/bundle.js"
   },
   "author": "Brian Spence",
   "license": "ISC",

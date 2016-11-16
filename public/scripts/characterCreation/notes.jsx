@@ -1,7 +1,7 @@
 var React = require('react');
-var NumberAttribute = require('./numberAttribute.js');
+var NumberAttribute = require('./numberAttribute.jsx');
 
-var Summary = React.createClass({
+var Notes = React.createClass({
 
     getInitialState: function() {
         return {
@@ -12,13 +12,13 @@ var Summary = React.createClass({
     render: function() {
         return (
 			<div>
-                <h2>Summary</h2>
+                <h2>Notes</h2>
                 <div>
-                	asdf
+                	text Area
             	</div>
             </div>
         );
   }
 });
 
-module.exports = Summary;
+module.exports = Notes;

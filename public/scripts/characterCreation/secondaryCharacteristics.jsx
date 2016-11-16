@@ -1,5 +1,5 @@
 var React = require('react');
-var NumberAttribute = require('./numberAttribute.js');
+var NumberAttribute = require('./numberAttribute.jsx');
 
 function SecondaryCharacteristics (props) {
     return (
